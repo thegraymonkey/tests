@@ -5,21 +5,22 @@ namespace App\Http\Controllers;
 use App\Http\Requests\IndexJobRequest;
 use App\Http\Requests\StoreJobRequest;
 use App\Mail\NewPublisherNotification;
-use App\Models\Publisher;
 use App\Services\JobService;
+use App\Services\PublisherService;
 use Illuminate\Support\Facades\Mail;
 
 class JobController extends Controller
 {
     public function __construct(
-        private JobService $service
+        private JobService $jobService,
+        private PublisherService $publisherService
     ) {}
 
     public function index(IndexJobRequest $request)
     {
-        $jobOffers = $this->service->getPosts($request);
+        $jobOffers = $this->jobService->getPosts($request);
 
-        $externalJobOffers = $this->service->getExternalPosts();
+        $externalJobOffers = $this->jobService->getExternalPosts();
 
         return view('job-board.index', compact('jobOffers', 'externalJobOffers'));
     }
@@ -28,15 +29,11 @@ class JobController extends Controller
     {
         $email = $request->input('email');
 
-        $publisher = Publisher::where('email', $email)->first();
+        $publisher = $this->publisherService->getPublisher($email);
 
         if (! $publisher) {
-            $publisher = Publisher::create([
-                Publisher::EMAIL => $email,
-                Publisher::APPROVED => null,
-            ]);
-
-            $post = $this->service->createPost($publisher, $request);
+            $publisher = $this->publisherService->createPublisher($email);
+            $post = $this->jobService->createPost($publisher, $request);
 
             Mail::to('moderator@job-bord.com')->send(new NewPublisherNotification($publisher, $post));
 
@@ -47,7 +44,7 @@ class JobController extends Controller
             return response(['message' => 'Job offer can\'t be created! Publisher is not approved.'], 400);
         }
 
-        $this->service->createPost($publisher, $request);
+        $this->jobService->createPost($publisher, $request);
 
         return response(['message' => 'Job offer created successfully!'], 201);
     }
