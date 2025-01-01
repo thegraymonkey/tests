@@ -32,7 +32,7 @@ class UpdateExternalPostsCache implements ShouldQueue
             $newPositions = [];
             foreach ($xml->position as $position) {
                 $jobDescriptions = [];
-                if (!empty($position->jobDescriptions)) {
+                if (! empty($position->jobDescriptions)) {
                     foreach ($position->jobDescriptions->jobDescription as $jobDescription) {
                         $jobDescriptions[] = [
                             'name' => (string) $jobDescription->name,
@@ -54,7 +54,7 @@ class UpdateExternalPostsCache implements ShouldQueue
 
             Cache::forever($cacheKey, $newPositions);
         } catch (\Exception $e) {
-            Log::error('Failed to update external posts cache: ' . $e->getMessage());
+            Log::error('Failed to update external posts cache: '.$e->getMessage());
         }
     }
 }

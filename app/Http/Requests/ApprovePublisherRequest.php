@@ -11,7 +11,7 @@ class ApprovePublisherRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->input('moderator_key') === (config('app.moderator_key'));
     }
 
     /**
@@ -23,7 +23,6 @@ class ApprovePublisherRequest extends FormRequest
     {
         return [
             'id' => 'required',
-            'moderator_key' => 'required'
         ];
     }
 }

@@ -11,7 +11,7 @@ class MarkPublisherAsSpamRequest extends FormRequest
      */
     public function authorize(): bool
     {
-         return true;
+        return true;
     }
 
     /**
@@ -23,7 +23,6 @@ class MarkPublisherAsSpamRequest extends FormRequest
     {
         return [
             'id' => 'required',
-            'moderator_key' => 'required'
         ];
     }
 }

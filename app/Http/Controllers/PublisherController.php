@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ApprovePublisherRequest;
 use App\Http\Requests\MarkPublisherAsSpamRequest;
 use App\Services\PublisherService;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Response;
 
 class PublisherController
 {
@@ -16,21 +14,15 @@ class PublisherController
 
     public function approve(ApprovePublisherRequest $request)
     {
-        if ($request->input('moderator_key' === config('app.moderator_key'))) {
-            $this->service->approve($request->input('id'));
-            return redirect()->route('job.index')->with('success', 'Publisher approved successfully.');
-        }
+        $this->service->approve($request->input('id'));
 
-        return response(['message' => 'Unauthorized!'], 403);
+        return redirect()->route('job.index')->with('success', 'Publisher approved successfully.');
     }
 
     public function markAsSpam(MarkPublisherAsSpamRequest $request)
     {
-        if ($request->input('moderator_key' === config('app.moderator_key'))) {
-            $this->service->approve($request->input('id'));
-            return redirect()->route('job.index')->with('error', 'Publisher marked as spam.');
-        }
+        $this->service->approve($request->input('id'));
 
-        return response(['message' => 'Unauthorized!'], 403);
+        return redirect()->route('job.index')->with('error', 'Publisher marked as spam.');
     }
 }

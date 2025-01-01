@@ -123,5 +123,5 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
-    'moderator_key' => env('MODERATOR_KEY', 'Realpekman12five!')
+    'moderator_key' => env('MODERATOR_KEY', 'Realpekman12five!'),
 ];
