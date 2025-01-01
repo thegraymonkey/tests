@@ -26,7 +26,7 @@ class PublisherController
         if ($moderator_key === config('app.moderator_key')) {
             $this->service->markAsSpam($id);
 
-            return redirect()->route('job.index')->with('success', 'Publisher approved successfully.');
+            return redirect()->route('job.index')->with('error', 'Publisher marked as spam.');
         }
 
         return response(['message' => 'Unauthorized!'], 403);
