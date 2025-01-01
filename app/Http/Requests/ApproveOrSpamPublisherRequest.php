@@ -4,14 +4,14 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class MarkPublisherAsSpamRequest extends FormRequest
+class ApproveOrSpamPublisherRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->input('moderator_key') === (config('app.moderator_key'));
     }
 
     /**
@@ -22,7 +22,7 @@ class MarkPublisherAsSpamRequest extends FormRequest
     public function rules()
     {
         return [
-            'id' => 'required',
+            'id' => 'required'
         ];
     }
 }

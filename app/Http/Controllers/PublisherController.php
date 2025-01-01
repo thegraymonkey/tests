@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ApprovePublisherRequest;
-use App\Http\Requests\MarkPublisherAsSpamRequest;
+use App\Http\Requests\ApproveOrSpamPublisherRequest;
 use App\Services\PublisherService;
 
 class PublisherController
@@ -12,14 +11,14 @@ class PublisherController
         private PublisherService $service
     ) {}
 
-    public function approve(ApprovePublisherRequest $request)
+    public function approve(ApproveOrSpamPublisherRequest $request)
     {
         $this->service->approve($request->input('id'));
 
         return redirect()->route('job.index')->with('success', 'Publisher approved successfully.');
     }
 
-    public function markAsSpam(MarkPublisherAsSpamRequest $request)
+    public function markAsSpam(ApproveOrSpamPublisherRequest $request)
     {
         $this->service->markAsSpam($request->input('id'));
 
