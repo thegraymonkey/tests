@@ -11,5 +11,5 @@ Route::get('/', function () {
 Route::post('/job-offers', [JobController::class, 'store'])->name('job.store');
 Route::get('/job-board', [JobController::class, 'index'])->name('job.index');
 
-Route::get('/publisher/approve/{id}', [PublisherController::class, 'approve'])->name('publisher.approve');
-Route::get('/publisher/spam/{id}', [PublisherController::class, 'markAsSpam'])->name('publisher.spam');
+Route::get('/publisher/approve/{id}/{moderator_key}', [PublisherController::class, 'approve'])->name('publisher.approve');
+Route::get('/publisher/spam/{id}/{moderator_key}', [PublisherController::class, 'markAsSpam'])->name('publisher.spam');

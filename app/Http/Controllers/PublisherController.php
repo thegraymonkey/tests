@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ApproveOrSpamPublisherRequest;
 use App\Services\PublisherService;
 
 class PublisherController
@@ -11,17 +10,25 @@ class PublisherController
         private PublisherService $service
     ) {}
 
-    public function approve(ApproveOrSpamPublisherRequest $request)
+    public function approve($id, $moderator_key)
     {
-        $this->service->approve($request->input('id'));
+        if ($moderator_key === config('app.moderator_key')) {
+            $this->service->approve($id);
 
-        return redirect()->route('job.index')->with('success', 'Publisher approved successfully.');
+            return redirect()->route('job.index')->with('success', 'Publisher approved successfully.');
+        }
+
+        return response(['message' => 'Publisher approved!'], 200);
     }
 
-    public function markAsSpam(ApproveOrSpamPublisherRequest $request)
+    public function markAsSpam($id, $moderator_key)
     {
-        $this->service->markAsSpam($request->input('id'));
+        if ($moderator_key === config('app.moderator_key')) {
+            $this->service->markAsSpam($id);
 
-        return redirect()->route('job.index')->with('error', 'Publisher marked as spam.');
+            return redirect()->route('job.index')->with('success', 'Publisher approved successfully.');
+        }
+
+        return response(['message' => 'Publisher marked as spam!'], 200);
     }
 }
