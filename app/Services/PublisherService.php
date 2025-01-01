@@ -13,18 +13,18 @@ class PublisherService
     public function approve($id): void
     {
         $publisher = $this->publisher->findOrFail($id);
-        $publisher->update(['approved' => 1]);
+        $publisher->update([Publisher::APPROVED => 1]);
     }
 
     public function markAsSpam($id): void
     {
         $publisher = $this->publisher->findOrFail($id);
-        $publisher->update(['approved' => 0]);
+        $publisher->update([Publisher::APPROVED => 0]);
     }
 
-    public function getPublisher(mixed $email)
+    public function getPublisher(string $email): ?Publisher
     {
-        return $this->publisher->where('email', $email)->first();
+        return $this->publisher->firstWhere('email', $email);
     }
 
     public function createPublisher(mixed $email)

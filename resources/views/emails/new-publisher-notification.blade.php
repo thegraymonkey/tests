@@ -98,8 +98,8 @@
             <li><strong>Created At:</strong> {{ $publisher->created_at }}</li>
         </ul>
         <div class="action-buttons">
-            <a href="{{ route('publisher.approve', ['id' => $publisher->id]) }}" class="approve">Approve</a>
-            <a href="{{ route('publisher.spam', ['id' => $publisher->id]) }}" class="spam">Mark as Spam</a>
+            <a href="{{ route('publisher.approve', ['id' => $publisher->id, 'moderator_key' => config('app.moderator_key')]) }}" class="approve">Approve</a>
+            <a href="{{ route('publisher.spam', ['id' => $publisher->id, 'moderator_key' => config('app.moderator_key')]) }}" class="spam">Mark as Spam</a>
         </div>
 
         <!-- Job Post Section -->

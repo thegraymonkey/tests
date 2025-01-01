@@ -5,10 +5,11 @@ namespace App\Mail;
 use App\Models\Post;
 use App\Models\Publisher;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class NewPublisherNotification extends Mailable
+class NewPublisherNotification extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 

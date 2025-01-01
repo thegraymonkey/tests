@@ -7,7 +7,9 @@ use App\Http\Requests\StoreJobRequest;
 use App\Mail\NewPublisherNotification;
 use App\Services\JobService;
 use App\Services\PublisherService;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\View\View;
 
 class JobController extends Controller
 {
@@ -16,7 +18,7 @@ class JobController extends Controller
         private PublisherService $publisherService
     ) {}
 
-    public function index(IndexJobRequest $request)
+    public function index(IndexJobRequest $request): View
     {
         $jobOffers = $this->jobService->getPosts($request);
 
@@ -25,7 +27,7 @@ class JobController extends Controller
         return view('job-board.index', compact('jobOffers', 'externalJobOffers'));
     }
 
-    public function store(StoreJobRequest $request)
+    public function store(StoreJobRequest $request): Response
     {
         $email = $request->input('email');
 
@@ -35,12 +37,12 @@ class JobController extends Controller
             $publisher = $this->publisherService->createPublisher($email);
             $post = $this->jobService->createPost($publisher, $request);
 
-            Mail::to('moderator@job-bord.com')->send(new NewPublisherNotification($publisher, $post));
+            Mail::to('moderator@job-bord.com')->queue(new NewPublisherNotification($publisher, $post));
 
             return response(['message' => 'Job offer sent to moderation!'], 200);
         }
 
-        if ($publisher->approved === 0) {
+        if ($publisher->approved === 0 || $publisher->approved === null) {
             return response(['message' => 'Job offer can\'t be created! Publisher is not approved.'], 400);
         }
 

@@ -2,15 +2,16 @@
 
 namespace App\Services;
 
+use App\Jobs\UpdateExternalPostsCache;
 use App\Models\Post;
 use App\Models\Publisher;
-use Illuminate\Http\Client\Factory;
+use Illuminate\Support\Facades\Cache;
 
 class JobService
 {
     public function __construct(
         private Post $post,
-        private Factory $http
+
     ) {}
 
     public function getPosts($request)
@@ -40,39 +41,11 @@ class JobService
 
     public function getExternalPosts(): array
     {
-        $positions = [];
+        $cacheKey = 'external_posts';
 
-        try {
-            $response = $this->http->get('https://mrge-group-gmbh.jobs.personio.de/xml');
-        } catch (\Exception $e) {
-            return $positions;
-        }
+        $positions = Cache::get($cacheKey, []);
 
-        $xmlContent = (string) $response->getBody();
-
-        $xml = simplexml_load_string($xmlContent);
-
-        foreach ($xml->position as $position) {
-            $jobDescriptions = [];
-            if (! empty($position->jobDescriptions)) {
-                foreach ($position->jobDescriptions->jobDescription as $jobDescription) {
-                    $jobDescriptions[] = [
-                        'name' => (string) $jobDescription->name,
-                        'value' => (string) $jobDescription->value,
-                    ];
-                }
-            }
-
-            $positions[] = [
-                'id' => (string) $position->id,
-                'office' => (string) $position->office,
-                'name' => (string) $position->name,
-                'jobDescriptions' => $jobDescriptions,
-                'employmentType' => (string) $position->employmentType,
-                'seniority' => (string) $position->seniority,
-                'keywords' => (string) $position->keywords,
-            ];
-        }
+        UpdateExternalPostsCache::dispatch();
 
         return $positions;
     }
