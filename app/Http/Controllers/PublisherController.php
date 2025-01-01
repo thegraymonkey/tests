@@ -18,7 +18,7 @@ class PublisherController
             return redirect()->route('job.index')->with('success', 'Publisher approved successfully.');
         }
 
-        return response(['message' => 'Publisher approved!'], 200);
+        return response(['message' => 'Unauthorized!'], 403);
     }
 
     public function markAsSpam($id, $moderator_key)
@@ -29,6 +29,6 @@ class PublisherController
             return redirect()->route('job.index')->with('success', 'Publisher approved successfully.');
         }
 
-        return response(['message' => 'Publisher marked as spam!'], 200);
+        return response(['message' => 'Unauthorized!'], 403);
     }
 }
