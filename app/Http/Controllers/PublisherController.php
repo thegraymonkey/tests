@@ -21,7 +21,7 @@ class PublisherController
 
     public function markAsSpam(MarkPublisherAsSpamRequest $request)
     {
-        $this->service->approve($request->input('id'));
+        $this->service->markAsSpam($request->input('id'));
 
         return redirect()->route('job.index')->with('error', 'Publisher marked as spam.');
     }
