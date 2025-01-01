@@ -24,7 +24,7 @@ class UpdateExternalPostsCache implements ShouldQueue
         try {
             $response = $http
                 ->retry(3, 1000)
-                ->withHeader( 'timeout', 1000)
+                ->timeout(0.5)
                 ->get(config('external.url'));
 
             if ($response->successful()) {
