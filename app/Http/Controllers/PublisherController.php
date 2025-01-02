@@ -10,25 +10,17 @@ class PublisherController
         private PublisherService $service
     ) {}
 
-    public function approve($id, $moderator_key)
+    public function approve($id)
     {
-        if ($moderator_key === config('app.moderator_key')) {
-            $this->service->approve($id);
+        $this->service->approve($id);
 
-            return redirect()->route('job.index')->with('success', 'Publisher approved successfully.');
-        }
-
-        return response(['message' => 'Unauthorized!'], 403);
+        return redirect()->route('job.index')->with('success', 'Publisher approved successfully.');
     }
 
-    public function markAsSpam($id, $moderator_key)
+    public function markAsSpam($id)
     {
-        if ($moderator_key === config('app.moderator_key')) {
-            $this->service->markAsSpam($id);
+        $this->service->markAsSpam($id);
 
-            return redirect()->route('job.index')->with('error', 'Publisher marked as spam.');
-        }
-
-        return response(['message' => 'Unauthorized!'], 403);
+        return redirect()->route('job.index')->with('error', 'Publisher marked as spam.');
     }
 }

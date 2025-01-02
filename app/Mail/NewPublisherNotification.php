@@ -19,6 +19,8 @@ class NewPublisherNotification extends Mailable implements ShouldQueue
     public function __construct(
         private readonly Publisher $publisher,
         private readonly Post $post,
+        private string $spamUrl,
+        private string $approveUrl
     ) {}
 
     /**
@@ -32,6 +34,8 @@ class NewPublisherNotification extends Mailable implements ShouldQueue
             ->view('emails.new-publisher-notification', [
                 'publisher' => $this->publisher,
                 'post' => $this->post,
+                'spamUrl' => $this->spamUrl,
+                'approveUrl' => $this->approveUrl,
             ]);
     }
 }

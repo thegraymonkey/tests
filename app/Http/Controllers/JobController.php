@@ -9,6 +9,7 @@ use App\Services\JobService;
 use App\Services\PublisherService;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\URL;
 use Illuminate\View\View;
 
 class JobController extends Controller
@@ -37,7 +38,20 @@ class JobController extends Controller
             $publisher = $this->publisherService->createPublisher($email);
             $post = $this->jobService->createPost($publisher, $request);
 
-            Mail::to('moderator@job-bord.com')->queue(new NewPublisherNotification($publisher, $post));
+            $spamUrl = URL::temporarySignedRoute(
+                'publisher.spam',
+                now()->addHours(24),
+                ['id' => $publisher->id]
+            );
+
+            $approveUrl = URL::temporarySignedRoute(
+                'publisher.approve',
+                now()->addHours(24),
+                ['id' => $publisher->id]
+            );
+
+            Mail::to('moderator@job-bord.com')
+                ->queue(new NewPublisherNotification($publisher, $post, $spamUrl, $approveUrl));
 
             return response(['message' => 'Job offer sent to moderation!'], 200);
         }
