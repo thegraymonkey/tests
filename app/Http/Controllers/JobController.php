@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\IndexJobRequest;
 use App\Http\Requests\StoreJobRequest;
 use App\Mail\NewPublisherNotification;
 use App\Services\JobService;
@@ -28,7 +27,12 @@ class JobController extends Controller
         return view('job-board.index', compact('jobOffers', 'externalJobOffers'));
     }
 
-    public function store(StoreJobRequest $request): Response
+    public function create()
+    {
+        return view('job-board.create');
+    }
+
+    public function store(StoreJobRequest $request)
     {
         $email = $request->input('email');
 
@@ -53,15 +57,15 @@ class JobController extends Controller
             Mail::to('moderator@job-bord.com')
                 ->queue(new NewPublisherNotification($publisher, $post, $spamUrl, $approveUrl));
 
-            return response(['message' => 'Job offer sent to moderation!'], 200);
+            return redirect()->back()->with('success', 'Job offer sent to moderation!');
         }
 
         if ($publisher->approved === 0 || $publisher->approved === null) {
-            return response(['message' => 'Job offer can\'t be created! Publisher is not approved.'], 400);
+            return redirect()->back()->with('error', 'Job offer can\'t be created! Publisher is not approved.');
         }
 
         $this->jobService->createPost($publisher, $request);
 
-        return response(['message' => 'Job offer created successfully!'], 201);
+        return redirect()->route('job.index')->with('success', 'Job offer created successfully!');
     }
 }

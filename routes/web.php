@@ -10,6 +10,8 @@ Route::get('/', function () {
 
 Route::post('/job-offers', [JobController::class, 'store'])->name('job.store');
 Route::get('/job-board', [JobController::class, 'index'])->name('job.index');
+Route::get('/job-create', [JobController::class, 'create'])->name('job.create');
+
 
 Route::get('/publisher/approve/{id}', [PublisherController::class, 'approve'])
     ->name('publisher.approve')
